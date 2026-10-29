@@ -1,0 +1,31 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity add4 is
+  -- this adds two 4-bit numbers and a carry in
+  Port ( X, Y : in std_logic_vector(3 downto 0);
+         Cin : in std_logic;
+         sum : out std_logic_vector(3 downto 0);
+         Cout : out std_logic );
+end add4;
+
+architecture Structural of add4 is
+    -- carry bits to connect one adder to the next
+    signal c0, c1, c2 : std_logic;
+    
+    component full_add is -- full adder component
+        Port ( X, Y, Cin : in std_logic;
+               Cout, sum : out std_logic );
+    end component;
+    
+begin
+    -- uses the carry from the input
+    FA0: full_add port map (X(0), Y(0), Cin, c0, sum(0));
+    -- uses the carry from FA0
+    FA1: full_add port map (X(1), Y(1), c0, c1, sum(1));
+    -- uses the carry from FA1
+    FA2: full_add port map (X(2), Y(2), c1, c2, sum(2));
+    -- sends the carry to the final output
+    FA3: full_add port map (X(3), Y(3), c2, Cout, sum(3));
+
+end Structural;
