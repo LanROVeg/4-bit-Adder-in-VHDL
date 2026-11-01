@@ -1,9 +1,10 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use std.env.all;
 
 entity tb_add4 is
-end tb_add4; -- no ports need for a testbench
+end tb_add4;
 
 architecture Test of tb_add4 is
     signal X, Y : std_logic_vector(3 downto 0) := "0000";
@@ -32,16 +33,17 @@ begin
             X <= std_logic_vector(test(3 downto 0));
             Y <= std_logic_vector(test(7 downto 4));
             Cin <= test(8);
-            -- I usually do 10 ns, but for 512 tests, 2 ns is much quicker
+            -- Allow signal updates to settle before checking the outputs.
             wait for 2 ns;
             -- sum from the input numbers
             sum := to_unsigned(i mod 16 + (i / 16) mod 16 + i / 256, 5);
             -- low 4 bits are sum, bit 4 is Cout
             
-            assert S = std_logic_vector(sum(3 downto 0)) report "bad sum";
-            assert Cout = sum(4) report "bad carry-out";
+            assert S = std_logic_vector(sum(3 downto 0)) report "bad sum" severity failure;
+            assert Cout = sum(4) report "bad carry-out" severity failure;
         end loop;
-        wait;
+        report "PASS: 4-bit adder 512 exhaustive binary cases";
+        finish;
     end process;
     
 end Test;

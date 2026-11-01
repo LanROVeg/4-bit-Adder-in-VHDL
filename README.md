@@ -1,27 +1,32 @@
-# Structural 4-bit ripple-carry adder
+# 4-bit ripple-carry adder
 
-An ECE 2700 digital-circuits exercise at Weber State University, implemented in VHDL
-and simulated in AMD/Xilinx Vivado 2026.1.
+An ECE 2700 VHDL project at Weber State University.
 
-`full_add` computes one sum bit and its carry. `add4` instantiates four full adders and
-connects each carry-out to the next stage's carry-in. Inputs are unsigned 4-bit X/Y and
-one-bit Cin; outputs are the low four sum bits and final Cout.
+`full_add` adds two bits and a carry-in. `add4` connects four full adders, passing
+each carry-out into the next stage. The outputs are the low four sum bits and Cout.
 
-## Run the self-checking simulations
+## Run the tests
 
-From Linux or WSL with Docker Engine:
+From Linux or WSL with Docker:
 
 ```bash
 bash run_checks.sh
 ```
 
-`tb_full` checks all eight input combinations. `tb_add4` checks all 512 X/Y/Cin
-combinations against an integer-arithmetic reference. The runner treats assertions of
-severity error or failure as a failed check and compiles into a temporary directory.
-GitHub Actions runs the same command.
+`tb_full` checks all **8** full-adder inputs. `tb_add4` checks all **512** X/Y/Cin
+combinations against an arithmetic reference. Both stop on an assertion failure
+and print a pass message when complete. GitHub Actions runs the same checks.
 
-In Vivado, open `Lab7.xpr`, select `tb_full` or `tb_add4` as simulation top, and run all.
-This is a functional combinational-logic exercise; the simulation wait interval is a
-stimulus interval, not a measured hardware propagation delay. No FPGA board constraints
-or post-route timing claim are included. Docker verification and documentation were
-added with AI assistance during a portfolio review.
+For Vivado 2024.2 or later, recreate the source project in PowerShell. Substitute
+your installed path if needed:
+
+```powershell
+& 'C:\AMDDesignTools\2026.1\Vivado\bin\vivado.bat' -mode gui -source create_project.tcl
+# Or run both benches automatically:
+& 'C:\AMDDesignTools\2026.1\Vivado\bin\vivado.bat' -mode batch -source verification/vivado.tcl
+```
+
+The script sets VHDL-2008 and keeps generated files in `.vivado-work/<Vivado version>/`.
+Use `add4` as synthesis top and `tb_full` or `tb_add4` as simulation top, then run all.
+These are functional simulation checks; the wait intervals are not measurements of
+hardware propagation delay. The original `Lab7.xpr` is also retained.

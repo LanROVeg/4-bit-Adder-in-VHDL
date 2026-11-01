@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use std.env.all;
 
 entity tb_full is
 end tb_full; -- no ports needed for a test bench
@@ -31,9 +32,10 @@ begin
             -- sum from the input numbers
             sum := to_unsigned((i mod 2) + ((i / 2) mod 2) + (i / 4), 2);
             -- stop if either output is wrong
-            assert S = sum(0) report "bad sum";
-            assert Cout = sum(1) report "bad carry-out";
+            assert S = sum(0) report "bad sum" severity failure;
+            assert Cout = sum(1) report "bad carry-out" severity failure;
         end loop;
-        wait;
+        report "PASS: full adder 8 exhaustive binary cases";
+        finish;
     end process;
 end Test;

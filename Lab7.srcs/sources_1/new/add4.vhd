@@ -19,13 +19,10 @@ architecture Structural of add4 is
     end component;
     
 begin
-    -- uses the carry from the input
+    -- Carry ripples from the least-significant bit to the final Cout.
     FA0: full_add port map (X(0), Y(0), Cin, c0, sum(0));
-    -- uses the carry from FA0
     FA1: full_add port map (X(1), Y(1), c0, c1, sum(1));
-    -- uses the carry from FA1
     FA2: full_add port map (X(2), Y(2), c1, c2, sum(2));
-    -- sends the carry to the final output
     FA3: full_add port map (X(3), Y(3), c2, Cout, sum(3));
 
 end Structural;
